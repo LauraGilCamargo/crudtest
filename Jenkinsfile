@@ -1,6 +1,14 @@
 pipeline {
   agent any
 
+  stage('Verificar dependencias') {
+    steps {
+        sh 'docker -v'
+        sh 'kubectl version --client'
+    }
+  }
+
+
   environment {
     COMPOSE_PROJECT_NAME = "crudtest"
   }
