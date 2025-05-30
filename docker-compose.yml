@@ -1,0 +1,69 @@
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: wso2am_db
+      MYSQL_USER: wso2user
+      MYSQL_PASSWORD: wso2pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  wso2am:
+    image: wso2/wso2am:latest
+    container_name: wso2am
+    depends_on:
+      - mysql
+    ports:
+      - "9443:9443"
+      - "8280:8280"
+      - "8243:8243"
+    environment:
+      - DATABASE_URL=jdbc:mysql://mysql:3306/wso2am_db
+      - DATABASE_USER=wso2user
+      - DATABASE_PASSWORD=wso2pass
+    volumes:
+      - ./wso2am/conf:/home/wso2carbon/wso2am-*/repository/conf
+    networks:
+      - app-network 
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend-app
+    depends_on:
+      - mysql
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=wso2user
+      - DB_PASSWORD=wso2pass
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend-app
+    depends_on:
+      - backend
+    command: ["node", "index.js"]
+    networks:
+      - app-network
+
+
+
+volumes:
+  mysql_data:
+  jenkins_home:
+
+networks:
+  app-network:
+    driver: bridge
