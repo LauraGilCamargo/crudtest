@@ -1,4 +1,4 @@
-const sum = require('../frontend/sum');
+const sum = require('./frontend/sum');
 const assert = require('assert');
 
 describe('Sum', () => {

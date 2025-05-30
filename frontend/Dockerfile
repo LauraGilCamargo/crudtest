@@ -1,14 +1,18 @@
 # Usar una imagen base oficial de Node.js
 FROM node:18
 
-# Crear directorio de trabajo
-WORKDIR /usr/src/app
+# Establece el directorio de trabajo dentro del contenedor
+WORKDIR /app
+
+# Copia el package.json e instala dependencias si es necesario
+COPY package*.json ./
+RUN npm install
 
 # Copiar archivos al contenedor
 COPY . .
 
-# Crear archivo de entrada para pruebas (opcional)
-# RUN echo "console.log(require('./index')(2, 3));" > app.js
-
-# Comando para ejecutar tu script (ajústalo según necesidad)
+# Exponer el puerto en el que corre el servidor frontend (ajústalo si es otro)
+EXPOSE 3000
+ 
+# Ejecutar la app
 CMD ["node", "index.js"]
