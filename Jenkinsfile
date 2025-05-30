@@ -1,12 +1,7 @@
 pipeline {
   agent any
 
-  stage('Verificar dependencias') {
-    steps {
-        sh 'docker -v'
-        sh 'kubectl version --client'
-    }
-  }
+  
 
 
   environment {
@@ -18,6 +13,14 @@ pipeline {
   }
 
   stages {
+
+    stage('Verificar dependencias') {
+    steps {
+        sh 'docker -v'
+        sh 'kubectl version --client'
+    }
+    }
+    
     stage('Clonar Repositorio') {
       steps {
         git 'https://github.com/LauraGilCamargo/crudtest.git'
