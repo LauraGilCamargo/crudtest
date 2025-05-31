@@ -22,8 +22,10 @@ pipeline {
 
     stage('Levantar Contenedores') {
       steps {
-        sh 'docker-compose down || true' // parar si ya están corriendo
-        sh 'docker-compose up -d --build'
+        bat '''
+        docker-compose down || exit 0
+        docker-compose up -d --build
+        '''   
       }
     }
 
@@ -78,7 +80,7 @@ pipeline {
   post {
     always {
       echo 'Deteniendo contenedores...'
-      sh 'docker-compose down'
+      bat 'docker-compose down'
     }
   }
 }
