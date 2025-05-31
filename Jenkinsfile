@@ -31,7 +31,7 @@ pipeline {
     stage('Verificar conexión con Kubernetes') {
       steps {
            bat '''
-           echo Verificando conexión con Minikube...
+                echo Verificando conexión con Minikube...
                 kubectl config current-context
                 kubectl get nodes
                 '''
@@ -47,17 +47,6 @@ pipeline {
 
                 rem Construir imagen
                 docker build -t %IMAGE_NAME% .
-                '''
-            }
-        }
-
-        stage('Eliminar recursos anteriores') {
-            steps {
-                bat '''
-                echo Eliminando recursos antiguos (si existen)...
-                kubectl delete -f secret.yaml --ignore-not-found
-                kubectl delete -f deployment.yaml --ignore-not-found
-                kubectl delete -f service.yaml --ignore-not-found
                 '''
             }
         }
