@@ -14,18 +14,25 @@ pipeline {
 
   stages {
 
+    
     stage('Clonar Repositorio') {
       steps {
         git branch: 'main', url: 'https://github.com/LauraGilCamargo/crudtest.git'
       }
     }
 
-    stage('Levantar Contenedores') {
+    stage('Limpiar entorno anterior') {
       steps {
-        bat '''
-        docker-compose up -d --build
-        '''   
+         dir('C:\Users\EQUIPO\.jenkins\jobs\Contenedores\workspace') 
+         bat 'docker-compose down --volumes --remove-orphans'
       }
+    }
+
+    stage('Construir y ejecutar Docker Compose') {
+      steps {
+        dir('C:\Users\EQUIPO\.jenkins\jobs\Contenedores\workspace') 
+        bat 'docker-compose up -d --build'
+        }
     }
 
     stage('Verificar conexión con Kubernetes') {
