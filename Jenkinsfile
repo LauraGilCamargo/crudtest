@@ -23,7 +23,6 @@ pipeline {
     stage('Levantar Contenedores') {
       steps {
         bat '''
-        docker-compose down || exit 0
         docker-compose up -d --build
         '''   
       }
