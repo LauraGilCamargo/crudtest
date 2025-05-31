@@ -9,18 +9,25 @@ pipeline {
   }
 
   tools {
-    nodejs 'node-11.0.0'
+    nodejs 'NodeJS'
   }
 
   stages {
 
     stage('Verificar dependencias') {
-    steps {
+      steps {
         sh 'docker -v'
         sh 'kubectl version --client'
+      }
     }
+
+    stage('Build') {
+      steps {
+        sh 'node --version'
+        sh 'npm install'
+      }
     }
-    
+
     stage('Clonar Repositorio') {
       steps {
         git 'https://github.com/LauraGilCamargo/crudtest.git'
