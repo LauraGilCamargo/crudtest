@@ -14,20 +14,6 @@ pipeline {
 
   stages {
 
-    stage('Verificar dependencias') {
-      steps {
-        sh 'docker -v'
-        sh 'kubectl version --client'
-      }
-    }
-
-    stage('Build') {
-      steps {
-        sh 'node --version'
-        sh 'npm install'
-      }
-    }
-
     stage('Clonar Repositorio') {
       steps {
         git branch: 'main', url: 'https://github.com/LauraGilCamargo/crudtest.git'
