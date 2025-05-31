@@ -12,28 +12,6 @@ pipeline {
 
     stages {
 
-        stage('Clonar Repositorio') {
-            steps {
-                git branch: 'main', url: 'https://github.com/LauraGilCamargo/crudtest.git'
-            }
-        }
-
-        stage('Limpiar entorno anterior') {
-            steps {
-                dir('C:/Users/EQUIPO/.jenkins/jobs/Contenedores/workspace') {
-                    bat 'docker-compose down --volumes --remove-orphans'
-                }
-            }
-        }
-
-        stage('Construir y ejecutar Docker Compose') {
-            steps {
-                dir('C:/Users/EQUIPO/.jenkins/jobs/Contenedores/workspace') {
-                    bat 'docker-compose up -d --build'
-                }
-            }
-        }
-
      stage('Iniciar Minikube') {
             steps {
                 bat 'minikube start --memory=4096 --cpus=2'
