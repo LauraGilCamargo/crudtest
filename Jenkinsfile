@@ -34,6 +34,49 @@ pipeline {
             }
         }
 
+     stage('Iniciar Minikube') {
+            steps {
+                bat 'minikube start --memory=4096 --cpus=2'
+            }
+        }
+
+        stage('Configurar entorno Docker con Minikube') {
+            steps {
+                bat '''
+                    echo Configurando entorno Docker de Minikube...
+                    minikube -p minikube docker-env --shell powershell > minikube_env.ps1
+                    powershell -ExecutionPolicy Bypass -File .\\minikube_env.ps1
+                '''
+            }
+        }
+
+        stage('Construir imágenes Docker') {
+            steps {
+                bat '''
+                    echo Construyendo imagen backend...
+                    docker build -t backend-app:latest ./backend
+
+                    echo Construyendo imagen frontend...
+                    docker build -t frontend-app:latest ./frontend
+                '''
+            }
+        }
+
+        stage('Aplicar manifiestos Kubernetes') {
+            steps {
+                bat '''
+                    echo Aplicando manifiestos Kubernetes...
+                    kubectl apply -f k8s/
+                '''
+            }
+        }
+
+        stage('Verificar estado de Pods') {
+            steps {
+                bat 'kubectl get pods'
+            }
+        }
+
     }
 
     post {
@@ -43,3 +86,4 @@ pipeline {
         }
     }
 }
+
