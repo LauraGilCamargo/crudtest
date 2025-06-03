@@ -28,16 +28,20 @@ pipeline {
 
         stage('Construir y ejecutar Docker Compose') {
             steps {
-                dir('C:/Users/EQUIPO/.jenkins/jobs/Contenedores/workspace') {
-                bat 'docker-compose up -d --build'
-                }
+                bat '''
+                docker-compose down
+                docker-compose up --build -d
+                '''
             }
         }
 
 
         stage('Iniciar Minikube') {
             steps {
-                bat 'minikube start --memory=4096 --cpus=2'
+                bat '''
+                    minikube stop
+                    minikube start --memory=4096 --cpus=2
+                '''
             }
         }
 
@@ -81,9 +85,11 @@ pipeline {
     }
 
     post {
-        always {
-            echo 'Deteniendo contenedores...'
-            bat 'docker-compose down'
+        failure {
+            echo "❌ Algo falló en el pipeline. Verifica los logs."
+        }
+        success {
+            echo "✅ Todo se ejecutó correctamente. ¡Contenedores y Kubernetes activos!"
         }
     }
 }
